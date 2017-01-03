@@ -18,13 +18,21 @@ var app = {
   init: function() {},
 
   send: function(message) {
+    var user = app.findUser();
+    console.log('user', user);
+    message.username = user;
     $.ajax({
       type: 'POST',
-      //url: url,
+      url: 'https://api.parse.com/1/classes/messages',
       data: JSON.stringify(message),
-      // success: success,
-      dataType: 'text',
+      success: function(data) {
+        console.log('message has been sent', data);
+      },
+      error: function(error) {
+        console.log('there is an error D:', error);
+      }
     });
+    //app.fetch();
   },
   fetch: function(handleData) {
     var messages = $.ajax({
@@ -35,7 +43,7 @@ var app = {
         //send the data.results to another function
         //send it to the render messsage function
         //
-        console.log('success');
+        //console.log('success');
         app.renderRoom(data.results);
         app.renderMessage(data.results);
       },
@@ -48,16 +56,9 @@ var app = {
     $('#chats').empty();
   },
   renderMessage: function(message) {
-    //<text class = username>message.username</text>
-    //</text> message.text </text>
     for (var i = 0; i < message.length; i++) {
-      $('#chats').append('<div>' + message[i].text + '<br></br><text class = username>' + message[i].username + ':</text></div>');
+      $('#chats').append('<div id = "messages"><text class = "username">' + message[i].username + ':</text><br></br>' + message[i].text + '</div>');
     }
-
-
-
-    //$('#chats').append('<div>' + message.text + '</div>');
-    //$('#main').append('<div class = username>' + message.username + '</div>');
   },
   renderRoom: function(room) {
     $('#roomSelect').append('<div>' + room + '</div>');
@@ -65,7 +66,7 @@ var app = {
     for (var i = 0; i < room.length; i++) {
       if (roomList.indexOf(room[i].roomname) === -1) {
         roomList.push(room[i].roomname);
-        $('#myDropdown').append('<div id = "roomSelect">' + room[i].roomname + '</div>');
+        $('#myDropdown').append('<div id = '+room[i].roomname +' class = "roomSelect">' + room[i].roomname + '</div>');
       }
     }
     //app.fetch();
@@ -76,23 +77,33 @@ var app = {
   },
   handleUsernameClick: function() {
   },
-  handleSubmit: function() {
-    //console.log('submit');
-    //app.send(sample);
-   //renderMessage
+  handleSubmit: function(newMessage) {
+    console.log('button pressed');
+      var PLACEHOLDER = 'bloop';
+      var submission = {
+        username: PLACEHOLDER,
+        text: newMessage,
+        roomname: PLACEHOLDER,
+      };
+      //console.log(JSON.stringify(submission));
+      app.send(submission);
   },
+  findUser: function() {
+    console.log(window.location.search);
+    return window.location.search.split('=')[2];},
 };
 
 (function() {
   $(document).ready(function() {
-    //console.log("test");
-    console.log("app.fetch()");
-    console.log(app.fetch());
+    app.fetch();
     $('#main .username').on('click', function() {
       app.handleUsernameClick();
     });
     $('#send').on('submit',  function() {
-      app.handleSubmit();
+      var newMessage = $('#send').serializeArray()[0];
+      app.handleSubmit(newMessage.value);
+
+
     });
   }
   )}())
