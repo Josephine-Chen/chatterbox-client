@@ -26,7 +26,13 @@
   <body>
     <div id="main">
       <h1>chatterbox</h1>
-    <div class = "dropdown"></div>
+      <div class="spinner"><img src="images/spiffygif_46x46.gif"></div>
+      <div id="rooms">
+        Room:
+        <select id="roomSelect">
+        </select>
+      </div>
+    <!-- <div class = "dropdown"></div>
     <button onclick="dropFunction()" class="dropbtn">Rooms</button>
       <div id="myDropdown" class="dropdown-content">
       </div>
@@ -46,12 +52,17 @@
           }
         }
       }
-      </script>
-      <form id = "send">
-        <input type="text" name="message" class="submit">
-        <input type="submit" value="Submit" class="submit">
+      </script> -->
+      <form action="#" id = "send" method="post">
+        <input type="text" name="message" id="message"/>
+        <input type="submit" name="submit" class="submit"/>
       </form>
     </div>
     <div id="chats"></div>
+    <script>
+    $(function(){
+      app.init()
+    });
+    </script>
   </body>
 </html>
